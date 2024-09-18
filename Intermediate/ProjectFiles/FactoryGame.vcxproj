@@ -291,6 +291,9 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClInclude Include="..\..\Source\FactoryGame\TP_WeaponComponent.h"/>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGFactoryGameInstance.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGFactoryUnit.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -312,6 +315,7 @@
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGRecipe.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGFactoryGameInstance.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGFactoryUnit.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGGlobalItemTable.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGGlobalRecipeTable.h"/>
