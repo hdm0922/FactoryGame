@@ -1,4 +1,5 @@
 #include "FGFactoryUnit.h"
+#include "FGIOGate.h"
 
 AFGFactoryUnit::AFGFactoryUnit(const uint32 _InputSize, const uint32 _OutputSize)
 	: Super()
@@ -11,7 +12,6 @@ AFGFactoryUnit::AFGFactoryUnit(const uint32 _InputSize, const uint32 _OutputSize
 
 	, bInputsValid(false)
 	, bOutputsValid(false)
-
 {
 	PrimaryActorTick.bCanEverTick = true;
 

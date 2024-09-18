@@ -7,6 +7,16 @@ AFGIOGate::AFGIOGate()
 
 }
 
+AFGIOGate* AFGIOGate::CreateIOGateWithItemSlot()
+{
+	return nullptr;
+}
+
+AFGIOGate* AFGIOGate::CreateIOGateWithItemBuffer()
+{
+	return nullptr;
+}
+
 void AFGIOGate::BeginPlay()
 {
 	Super::BeginPlay();

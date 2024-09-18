@@ -16,6 +16,9 @@ public:
 
 	AFGIOGate();
 
+	static AFGIOGate* CreateIOGateWithItemSlot();
+	static AFGIOGate* CreateIOGateWithItemBuffer();
+
 protected:
 
 	virtual void BeginPlay() override;
