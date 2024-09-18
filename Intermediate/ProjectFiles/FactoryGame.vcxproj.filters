@@ -88,7 +88,22 @@
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGFactoryUnit.cpp">
       <Filter>Source\FactoryGame\Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGGlobalItemTable.cpp">
+      <Filter>Source\FactoryGame\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGGlobalRecipeTable.cpp">
+      <Filter>Source\FactoryGame\Private</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGIOGate.cpp">
+      <Filter>Source\FactoryGame\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGItem.cpp">
+      <Filter>Source\FactoryGame\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGItemStorage.cpp">
+      <Filter>Source\FactoryGame\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGRecipe.cpp">
       <Filter>Source\FactoryGame\Private</Filter>
     </ClCompile>
     <Filter Include="Source\FactoryGame\Public">
@@ -99,6 +114,28 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGIOGate.h">
       <Filter>Source\FactoryGame\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGItemStorage.h">
+      <Filter>Source\FactoryGame\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source\FactoryGame\Public\DataAssets">
+      <UniqueIdentifier>{dd0e7087-f165-41da-a6e7-d77400d55917}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGItem.h">
+      <Filter>Source\FactoryGame\Public\DataAssets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGGlobalItemTable.h">
+      <Filter>Source\FactoryGame\Public\DataAssets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGGlobalRecipeTable.h">
+      <Filter>Source\FactoryGame\Public\DataAssets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGRecipe.h">
+      <Filter>Source\FactoryGame\Public\DataAssets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
