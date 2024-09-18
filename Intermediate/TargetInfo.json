@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "FactoryGame",
+			"Path": "..\\Source\\FactoryGame.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "FactoryGameEditor",
+			"Path": "..\\Source\\FactoryGameEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

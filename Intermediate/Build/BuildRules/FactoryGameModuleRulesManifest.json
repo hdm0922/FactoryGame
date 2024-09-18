@@ -1,0 +1,8 @@
+{
+	"SourceFiles": [
+		"C:\\Users\\Han\\Desktop\\Project\\UnrealProjects\\FactoryGame\\Source\\FactoryGame\\FactoryGame.Build.cs",
+		"C:\\Users\\Han\\Desktop\\Project\\UnrealProjects\\FactoryGame\\Source\\FactoryGame.Target.cs",
+		"C:\\Users\\Han\\Desktop\\Project\\UnrealProjects\\FactoryGame\\Source\\FactoryGameEditor.Target.cs"
+	],
+	"EngineVersion": "5.4.4"
+}
