@@ -28,7 +28,14 @@ public:
 	virtual void Work(float DeltaTime) override;
 	virtual void NotifyInputChanged() override;
 	virtual void NotifyOutputChanged() override;
+
 	virtual void SetStaticMeshComponent() override;
+
+	virtual void StoreItem(UFGItem* _Item);
+	virtual void RemoveItem(UFGItem* _Item);
+
+	virtual bool CanStoreItem(UFGItem* _Item);
+	virtual bool CanRemoveItem(UFGItem* _Item);
 
 protected:
 

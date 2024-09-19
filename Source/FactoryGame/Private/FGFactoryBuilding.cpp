@@ -45,6 +45,24 @@ void AFGFactoryBuilding::SetStaticMeshComponent()
 {
 }
 
+void AFGFactoryBuilding::StoreItem(UFGItem* _Item)
+{
+}
+
+void AFGFactoryBuilding::RemoveItem(UFGItem* _Item)
+{
+}
+
+bool AFGFactoryBuilding::CanStoreItem(UFGItem* _Item)
+{
+	return false;
+}
+
+bool AFGFactoryBuilding::CanRemoveItem(UFGItem* _Item)
+{
+	return false;
+}
+
 void AFGFactoryBuilding::UpdateRunningState()
 {
 }

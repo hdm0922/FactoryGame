@@ -13,10 +13,12 @@ class FACTORYGAME_API UFGItemStorage : public UObject
 	
 public:
 
+	virtual void Initialize(UFGItem* _Item = nullptr);
+
 	virtual void Store(UFGItem* _Item, uint32 _LoadSize = 1);
 	virtual void Remove(uint32 _LoadSize);
 
-	virtual bool CanStore(UFGItem* _Item, uint32 _LoadSize = 1);
-	virtual bool CanRemove(uint32 _LoadSize = 1);
+	virtual bool CanStore(UFGItem* _Item, uint32 _LoadSize = 1) const;
+	virtual bool CanRemove(uint32 _LoadSize = 1) const;
 
 };
