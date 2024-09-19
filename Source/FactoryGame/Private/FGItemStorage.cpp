@@ -21,7 +21,7 @@ bool UFGItemStorage::CanStore(UFGItem* _Item, uint32 _LoadSize) const
 	return false;
 }
 
-bool UFGItemStorage::CanRemove(uint32 _LoadSize) const
+bool UFGItemStorage::CanRemove(UFGItem* _Item, uint32 _LoadSize) const
 {
 	checkf(false, TEXT("ABSTRACT"));
 	return false;

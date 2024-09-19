@@ -15,7 +15,7 @@ class FACTORYGAME_API AFGFactoryBuilding : public AFGFactoryUnit
 	
 public:
 
-	AFGFactoryBuilding() : AFGFactoryBuilding(0,0) {}
+	AFGFactoryBuilding() : AFGFactoryBuilding(1,1) {}
 	AFGFactoryBuilding(const uint32 _InputSize, const uint32 _OutputSize);
 
 protected:
@@ -29,26 +29,40 @@ public:
 	virtual void NotifyInputChanged() override;
 	virtual void NotifyOutputChanged() override;
 
-	virtual void SetStaticMeshComponent() override;
-
-	virtual void StoreItem(UFGItem* _Item);
-	virtual void RemoveItem(UFGItem* _Item);
-
-	virtual bool CanStoreItem(UFGItem* _Item);
-	virtual bool CanRemoveItem(UFGItem* _Item);
+	void SelectRecipe(uint32 _RecipeID);
+	void SelectRecipe(UFGRecipe* _Recipe);
 
 protected:
 
-	virtual void UpdateRunningState() override;
+	virtual void InitializeStaticMeshComponent() override;
 	virtual void ProduceOutput();
+
+	virtual bool CanWork() override;
+
+private:
+
+	AFGUnitConnector* CreateConnector(const FVector& _Location);
+	void CreateInputConnectors();
+	void CreateOutputConnectors();
+
+	bool IsAllInputsValid() const;
+	bool IsAllOutputsValid() const;
 
 public:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TArray<AFGUnitConnector*> InputConnectors;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TMap<uint32, UFGItemSlot*> InputItemSlots;
+
+
 	UPROPERTY(EditAnywhere, Category = "Output")
 	TArray<AFGUnitConnector*> OutputConnectors;
+
+	UPROPERTY(EditAnywhere, Category = "Output")
+	TMap<uint32, UFGItemSlot*> OutputItemSlots;
+
 
 	UPROPERTY(EditAnywhere, Category = "Recipe")
 	UFGRecipe* Recipe;

@@ -5,6 +5,7 @@
 #include "FGFactoryUnit.generated.h"
 
 class UFGItem;
+class UFGItemStorage;
 
 UCLASS()
 class FACTORYGAME_API AFGFactoryUnit : public AActor
@@ -27,19 +28,17 @@ public:
 	virtual void NotifyInputChanged();
 	virtual void NotifyOutputChanged();
 
-	virtual void SetStaticMeshComponent();
-
-	virtual void StoreItem(UFGItem* _Item);
-	virtual void RemoveItem(UFGItem* _Item);
-
-	virtual bool CanStoreItem(UFGItem* _Item);
-	virtual bool CanRemoveItem(UFGItem* _Item);
+	virtual void StoreItem(UFGItemStorage* _ItemStorage, UFGItem* _Item);
+	virtual void RemoveItem(UFGItemStorage* _ItemStorage, UFGItem* _Item);
+	virtual bool CanStoreItem(UFGItemStorage* _ItemStorage, UFGItem* _Item);
+	virtual bool CanRemoveItem(UFGItemStorage* _ItemStorage, UFGItem* _Item);
 
 protected:
 
-	virtual void UpdateRunningState();
+	virtual void InitializeStaticMeshComponent();
+	virtual bool CanWork();
 
-public:
+	void UpdateRunningState();
 
 protected:
 

@@ -11,8 +11,6 @@ AFGFactoryUnit::AFGFactoryUnit(const uint32 _InputSize, const uint32 _OutputSize
 	, bOutputsValid(false)
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	this->SetStaticMeshComponent();
 }
 
 void AFGFactoryUnit::BeginPlay()
@@ -44,7 +42,29 @@ void AFGFactoryUnit::NotifyOutputChanged()
 {
 }
 
-void AFGFactoryUnit::SetStaticMeshComponent()
+void AFGFactoryUnit::StoreItem(UFGItemStorage* _ItemStorage, UFGItem* _Item)
+{
+	checkf(false, TEXT("ABSTRACT"));
+}
+
+void AFGFactoryUnit::RemoveItem(UFGItemStorage* _ItemStorage, UFGItem* _Item)
+{
+	checkf(false, TEXT("ABSTRACT"));
+}
+
+bool AFGFactoryUnit::CanStoreItem(UFGItemStorage* _ItemStorage, UFGItem* _Item)
+{
+	checkf(false, TEXT("ABSTRACT"));
+	return false;
+}
+
+bool AFGFactoryUnit::CanRemoveItem(UFGItemStorage* _ItemStorage, UFGItem* _Item)
+{
+	checkf(false, TEXT("ABSTRACT"));
+	return false;
+}
+
+void AFGFactoryUnit::InitializeStaticMeshComponent()
 {
 	this->StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	this->RootComponent = StaticMeshComponent;
@@ -52,32 +72,15 @@ void AFGFactoryUnit::SetStaticMeshComponent()
 	return;
 }
 
-void AFGFactoryUnit::StoreItem(UFGItem* _Item)
-{
-	checkf(false, TEXT("ABSTRACT"));
-}
-
-void AFGFactoryUnit::RemoveItem(UFGItem* _Item)
-{
-	checkf(false, TEXT("ABSTRACT"));
-}
-
-bool AFGFactoryUnit::CanStoreItem(UFGItem* _Item)
-{
-	checkf(false, TEXT("ABSTRACT"));
-	return false;
-}
-
-bool AFGFactoryUnit::CanRemoveItem(UFGItem* _Item)
-{
-	checkf(false, TEXT("ABSTRACT"));
-	return false;
-}
 
 void AFGFactoryUnit::UpdateRunningState()
 {
-	const bool bCanWork = this->bInputsValid && this->bOutputsValid;
-	this->SetActorTickEnabled(bCanWork);
+	this->SetActorTickEnabled(this->CanWork());
 
 	return;
+}
+
+bool AFGFactoryUnit::CanWork()
+{
+	return (this->bInputsValid && this->bOutputsValid);
 }

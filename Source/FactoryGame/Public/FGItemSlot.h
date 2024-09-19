@@ -21,7 +21,7 @@ public:
 	virtual void Remove(uint32 _LoadSize) override;
 
 	virtual bool CanStore(UFGItem* _Item, uint32 _LoadSize = 1) const override;
-	virtual bool CanRemove(uint32 _LoadSize = 1) const override;
+	virtual bool CanRemove(UFGItem* _Item, uint32 _LoadSize = 1) const override;
 
 	const UFGItem* GetItemSample() const { return this->Item; }
 	const uint32 GetItemsInSlot() const { return this->ItemsInSlot; }

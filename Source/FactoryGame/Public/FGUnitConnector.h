@@ -30,6 +30,10 @@ public:
 	AFGFactoryUnit* GetInputUnit() const { return this->InputUnit; }
 	AFGFactoryUnit* GetOutputUnit() const { return this->OutputUnit; }
 
+private:
+
+	void InitializeStaticMeshComponent();
+
 public:
 
 	UPROPERTY(EditAnywhere, Category = "Connector")
@@ -37,5 +41,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Connector")
 	AFGFactoryUnit* OutputUnit;
+
+private:
+
+	UStaticMeshComponent* StaticMeshComponent;
 
 };
