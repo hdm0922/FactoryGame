@@ -27,14 +27,9 @@ public:
 	float WorkTime;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
-	TArray<UFGItem*> InputItems;
-
-	UPROPERTY(EditAnywhere, Category = "Input")
-	TArray<uint32> InputItemsCount;
+	TMap<UFGItem*, uint32> InputItems;
 
 	UPROPERTY(EditAnywhere, Category = "Output")
-	TArray<UFGItem*> OutputItems;
+	TMap<UFGItem*, uint32> OutputItems;
 
-	UPROPERTY(EditAnywhere, Category = "Output")
-	TArray<uint32> OutputItemsCount;
 };

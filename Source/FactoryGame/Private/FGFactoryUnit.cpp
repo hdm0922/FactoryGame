@@ -1,11 +1,8 @@
 #include "FGFactoryUnit.h"
-#include "FGIOGate.h"
+#include "FGItem.h"
 
 AFGFactoryUnit::AFGFactoryUnit(const uint32 _InputSize, const uint32 _OutputSize)
 	: Super()
-
-	, InputGates(TArray<AFGIOGate*>(nullptr, _InputSize))
-	, OutputGates(TArray<AFGIOGate*>(nullptr, _InputSize))
 
 	, StaticMeshComponent(nullptr)
 	, WorkTime(0.0f)
@@ -53,6 +50,28 @@ void AFGFactoryUnit::SetStaticMeshComponent()
 	this->RootComponent = StaticMeshComponent;
 
 	return;
+}
+
+void AFGFactoryUnit::StoreItem(UFGItem* _Item)
+{
+	checkf(false, TEXT("ABSTRACT"));
+}
+
+void AFGFactoryUnit::RemoveItem(UFGItem* _Item)
+{
+	checkf(false, TEXT("ABSTRACT"));
+}
+
+bool AFGFactoryUnit::CanStoreItem(UFGItem* _Item)
+{
+	checkf(false, TEXT("ABSTRACT"));
+	return false;
+}
+
+bool AFGFactoryUnit::CanRemoveItem(UFGItem* _Item)
+{
+	checkf(false, TEXT("ABSTRACT"));
+	return false;
 }
 
 void AFGFactoryUnit::UpdateRunningState()

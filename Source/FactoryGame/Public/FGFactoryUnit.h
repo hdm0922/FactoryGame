@@ -4,7 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "FGFactoryUnit.generated.h"
 
-class AFGIOGate;
+class UFGItem;
 
 UCLASS()
 class FACTORYGAME_API AFGFactoryUnit : public AActor
@@ -26,19 +26,20 @@ public:
 	virtual void Work(float DeltaTime);
 	virtual void NotifyInputChanged();
 	virtual void NotifyOutputChanged();
+
 	virtual void SetStaticMeshComponent();
+
+	virtual void StoreItem(UFGItem* _Item);
+	virtual void RemoveItem(UFGItem* _Item);
+
+	virtual bool CanStoreItem(UFGItem* _Item);
+	virtual bool CanRemoveItem(UFGItem* _Item);
 
 protected:
 
 	virtual void UpdateRunningState();
 
 public:
-
-	UPROPERTY(EditAnywhere, Category = "Factory")
-	TArray<AFGIOGate*> InputGates;
-
-	UPROPERTY(EditAnywhere, Category = "Factory")
-	TArray<AFGIOGate*> OutputGates;
 
 protected:
 
