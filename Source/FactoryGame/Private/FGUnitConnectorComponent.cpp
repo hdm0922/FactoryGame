@@ -29,15 +29,17 @@ void UFGUnitConnectorComponent::SetStaticMeshComponentProperty(
 void UFGUnitConnectorComponent::NotifyInputChanged()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Notify Input Changed Called, UnitConnector"));
-	if (!this->InputUnit) return;
-	this->InputUnit->NotifyOutputChanged();
+
+	if (this->InputUnit) { this->InputUnit->NotifyOutputChanged(); }
+	if (this->OutputUnit) { this->OutputUnit->NotifyInputChanged(); }
 }
 
 void UFGUnitConnectorComponent::NotifyOutputChanged()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Notify Output Changed Called, UnitConnector"));
-	if (!this->OutputUnit) return;
-	this->OutputUnit->NotifyInputChanged();
+
+	if (this->InputUnit) { this->InputUnit->NotifyOutputChanged(); }
+	if (this->OutputUnit) { this->OutputUnit->NotifyInputChanged(); }
 }
 
 void UFGUnitConnectorComponent::InitializeStaticMeshComponent()

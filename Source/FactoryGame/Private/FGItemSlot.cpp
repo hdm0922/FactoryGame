@@ -37,6 +37,7 @@ bool UFGItemSlot::CanStore(UFGItem* _Item, uint32 _LoadSize) const
 
 bool UFGItemSlot::CanRemove(UFGItem* _Item, uint32 _LoadSize) const
 {
-	const bool bItemSame = (this->GetItemSample() == _Item);
-	return bItemSame && (this->GetItemsInSlot() >= _LoadSize);
+	const bool BHasEnoughItems = (this->GetItemsInSlot() >= _LoadSize);
+	const bool BItemSame = (this->GetItemSample() == _Item);
+	return (BItemSame || !_Item) && BHasEnoughItems;
 }

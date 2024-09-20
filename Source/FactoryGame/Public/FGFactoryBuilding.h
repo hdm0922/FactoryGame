@@ -15,8 +15,8 @@ class FACTORYGAME_API AFGFactoryBuilding : public AFGFactoryUnit
 	
 public:
 
-	AFGFactoryBuilding() : AFGFactoryBuilding(4,1) {}
-	AFGFactoryBuilding(const uint32 _InputSize, const uint32 _OutputSize);
+	AFGFactoryBuilding() : AFGFactoryBuilding(4) {}
+	AFGFactoryBuilding(const uint32 _InputSize);
 
 protected:
 
@@ -67,10 +67,10 @@ public:
 
 
 	UPROPERTY(EditAnywhere, Category = "Output")
-	TArray<UFGUnitConnectorComponent*> OutputConnectors;
+	UFGUnitConnectorComponent* OutputConnector;
 
 	UPROPERTY(EditAnywhere, Category = "Output")
-	TMap<uint32, UFGItemSlot*> OutputItemSlots;
+	UFGItemSlot* OutputItemSlot;
 
 
 	UPROPERTY(EditAnywhere, Category = "Recipe")

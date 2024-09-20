@@ -5,20 +5,20 @@
 #include "FGGlobalRecipeTable.h"
 #include "FGUnitConnectorComponent.h"
 
-AFGFactoryBuilding::AFGFactoryBuilding(const uint32 _InputSize, const uint32 _OutputSize)
+AFGFactoryBuilding::AFGFactoryBuilding(const uint32 _InputSize)
 	: Super()
 	, InputConnectors({})
 	, InputItemSlots({})
 
-	, OutputConnectors({})
-	, OutputItemSlots({})
+	, OutputConnector(nullptr)
+	, OutputItemSlot(nullptr)
 
 	, Recipe(nullptr)
 {
 	this->InitializeStaticMeshComponent();
 
 	this->CreateInputConnectors(_InputSize);
-	this->CreateOutputConnectors(_OutputSize);
+	this->CreateOutputConnectors(1);
 }
 
 void AFGFactoryBuilding::BeginPlay()
@@ -100,10 +100,8 @@ void AFGFactoryBuilding::StoreItem(UFGItem* InItem, uint32 InLoadSize)
 
 void AFGFactoryBuilding::RemoveItem(UFGItem* InItem, uint32 InLoadSize)
 {
-	this->OutputItemSlots[InItem->ItemID]->Remove(InLoadSize);
-
-	for (UFGUnitConnectorComponent* OutputConnector : this->OutputConnectors)
-		OutputConnector->NotifyInputChanged();
+	this->OutputItemSlot->Remove(InLoadSize);
+	this->OutputConnector->NotifyInputChanged();
 }
 
 bool AFGFactoryBuilding::CanStoreItem(UFGItem* InItem, uint32 InLoadSize)
@@ -115,10 +113,7 @@ bool AFGFactoryBuilding::CanStoreItem(UFGItem* InItem, uint32 InLoadSize)
 
 bool AFGFactoryBuilding::CanRemoveItem(UFGItem* InItem, uint32 InLoadSize)
 {
-	return 
-		this->OutputItemSlots.Contains(InItem->ItemID) &&
-		this->OutputItemSlots[InItem->ItemID]->CanStore(InItem, InLoadSize);
-
+	return this->OutputItemSlot->CanRemove(InItem, InLoadSize);
 }
 
 void AFGFactoryBuilding::InitializeStaticMeshComponent()
@@ -146,7 +141,7 @@ void AFGFactoryBuilding::SelectRecipe(UFGRecipe* _Recipe)
 	this->InputItemSlots.Empty(0);
 
 	// Clear OutputItems (Give Player Left Items)
-	this->OutputItemSlots.Empty(0);
+	this->OutputItemSlot->Initialize();
 
 	if (!this->Recipe) return;
 
@@ -164,17 +159,14 @@ void AFGFactoryBuilding::SelectRecipe(UFGRecipe* _Recipe)
 		InputConnector->NotifyOutputChanged();
 
 	// Set OutputItems Context
+	// Must Change Recipe Output Data...
 	for (const auto& GeneratedItemData : this->Recipe->OutputItems)
 	{
-		UFGItemSlot* ItemSlot = NewObject<UFGItemSlot>();
-		ItemSlot->Initialize(GeneratedItemData.Key);
-
-		this->OutputItemSlots.Add(GeneratedItemData.Key->ItemID, ItemSlot);
+		this->OutputItemSlot->Initialize(GeneratedItemData.Key);
 	}
 
-	// Notify OutputConnectors
-	for (UFGUnitConnectorComponent* OutputConnector : this->OutputConnectors)
-		OutputConnector->NotifyInputChanged();
+	// Notify OutputConnector
+	this->OutputConnector->NotifyInputChanged();
 }
 
 void AFGFactoryBuilding::ProduceOutput()
@@ -193,13 +185,11 @@ void AFGFactoryBuilding::ProduceOutput()
 	// Store Output Items
 	for (const auto& GeneratedItemData : this->Recipe->OutputItems)
 	{
-		UFGItemSlot* ItemSlot = *this->OutputItemSlots.Find(GeneratedItemData.Key->ItemID);
-		ItemSlot->Remove(GeneratedItemData.Value);
+		this->OutputItemSlot->Store(GeneratedItemData.Key, GeneratedItemData.Value);
 	}
 
 	// NotifyOutputConnectors
-	for (UFGUnitConnectorComponent* OutputConnector : this->OutputConnectors)
-		OutputConnector->NotifyInputChanged();
+	this->OutputConnector->NotifyInputChanged();
 
 	return;
 }
@@ -233,14 +223,8 @@ void AFGFactoryBuilding::CreateInputConnectors(const uint32 _InputSize)
 
 void AFGFactoryBuilding::CreateOutputConnectors(const uint32 _OutputSize)
 {
-	this->OutputConnectors.SetNum(_OutputSize);
-
-	for (int32 iter = 0; iter < this->OutputConnectors.Num(); iter++)
-	{
-		FString ConnectorName = FString::Printf(TEXT("OutputConnector_%d"), iter);
-		this->OutputConnectors[iter] = this->CreateDefaultSubobject<UFGUnitConnectorComponent>(FName(*ConnectorName));
-		this->OutputConnectors[iter]->SetInputUnit(this);
-	}
+	this->OutputConnector = this->CreateDefaultSubobject<UFGUnitConnectorComponent>(TEXT("OutputConnector"));
+	this->OutputConnector->SetInputUnit(this);
 
 	// Set Connector Transforms
 	FVector Origin;
@@ -248,7 +232,9 @@ void AFGFactoryBuilding::CreateOutputConnectors(const uint32 _OutputSize)
 	this->GetActorBounds(true, Origin, BoxExtent);
 
 	const FVector LeftEnd = FVector(BoxExtent[0], -BoxExtent[1], -0.5f * BoxExtent[2]);
-	this->PlaceConnectorsArray(LeftEnd, this->OutputConnectors);
+
+	TArray<UFGUnitConnectorComponent*> OutputConnectorsArray = {this->OutputConnector};
+	this->PlaceConnectorsArray(LeftEnd, OutputConnectorsArray);
 
 	return;
 }
@@ -293,8 +279,8 @@ bool AFGFactoryBuilding::IsAllOutputsValid() const
 
 	for (const auto& GeneratedItemData : this->Recipe->OutputItems)
 	{
-		UFGItemSlot* ItemSlot = this->OutputItemSlots[GeneratedItemData.Key->ItemID];
-		const bool bEnoughSpaceInSlot = ItemSlot->CanStore(GeneratedItemData.Key, GeneratedItemData.Value);
+		const bool bEnoughSpaceInSlot = this->OutputItemSlot->
+			CanStore(GeneratedItemData.Key, GeneratedItemData.Value);
 		if (!bEnoughSpaceInSlot) return false;
 	}
 

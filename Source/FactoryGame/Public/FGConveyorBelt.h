@@ -14,11 +14,14 @@ class FACTORYGAME_API AFGConveyorBelt : public AFGFactoryUnit
 	
 public:
 
-	AFGConveyorBelt();
+	AFGConveyorBelt() : AFGConveyorBelt(60) {}
+	AFGConveyorBelt(const uint32 InTransportVolumePerMinute);
 
 	virtual void Work(float DeltaTime) override;
 	virtual void NotifyInputChanged() override;
 	virtual void NotifyOutputChanged() override;
+
+	bool IsCycleReturned() const;
 
 public:
 
@@ -30,6 +33,9 @@ public:
 
 private:
 
+	bool bReceivedSleepRequest;
+
+	uint32 TransportVolumePerMinute;
 	uint32 NumberOfItemsSleeping;
 
 	TList<AFGItemActorComponent*> TransportingItems;
