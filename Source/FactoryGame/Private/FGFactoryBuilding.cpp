@@ -1,5 +1,6 @@
 #include "FGFactoryBuilding.h"
 #include "FGItemSlot.h"
+#include "FGGlobalItemTable.h"
 #include "FGRecipe.h"
 #include "FGGlobalRecipeTable.h"
 #include "FGUnitConnector.h"
@@ -33,7 +34,7 @@ void AFGFactoryBuilding::BeginPlay()
 
 		// Recipe 1 : [1] x 1 -> [2] x 1
 		// Give InputItemSlot [1] x 5
-		this->InputItemSlots[1] += 5;
+		this->InputItemSlots[1]->Store(UFGGlobalItemTable::GetItem(1), 5);
 		this->NotifyInputChanged();
 
 		this->UpdateRunningState();
@@ -236,7 +237,6 @@ bool AFGFactoryBuilding::IsAllInputsValid() const
 		const bool bEnoughItemsInSlot = ItemSlot->CanRemove(RequiredItemData.Key, RequiredItemData.Value);
 		if (!bEnoughItemsInSlot) return false;
 	}
-
 	return true;
 }
 
