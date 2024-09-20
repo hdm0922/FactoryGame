@@ -76,6 +76,7 @@ void AFGFactoryUnit::InitializeStaticMeshComponent()
 void AFGFactoryUnit::UpdateRunningState()
 {
 	this->SetActorTickEnabled(this->CanWork());
+	UE_LOG(LogTemp, Warning, TEXT("Now FactoryUnit's Tick Set As : %d"), this->CanWork());
 
 	return;
 }

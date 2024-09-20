@@ -71,7 +71,6 @@ void AFGFactoryBuilding::Work(float DeltaTime)
 
 void AFGFactoryBuilding::NotifyInputChanged()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Notify Input Changed Called, FactoryBuilding"));
 	const bool bNewState = this->IsAllInputsValid();
 
 	if (this->bInputsValid == bNewState) return;
@@ -84,7 +83,6 @@ void AFGFactoryBuilding::NotifyInputChanged()
 
 void AFGFactoryBuilding::NotifyOutputChanged()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Notify Output Changed Called, FactoryBuilding"));
 	const bool bNewState = this->IsAllOutputsValid();
 
 	if (this->bOutputsValid == bNewState) return;
