@@ -118,6 +118,9 @@
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGUnitConnector.cpp">
       <Filter>Source\FactoryGame\Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGUnitConnectorComponent.cpp">
+      <Filter>Source\FactoryGame\Private</Filter>
+    </ClCompile>
     <Filter Include="Source\FactoryGame\Public">
       <UniqueIdentifier>{86FBAA01-E659-354A-AC66-0A5357B19FB5}</UniqueIdentifier>
     </Filter>
@@ -152,6 +155,9 @@
       <Filter>Source\FactoryGame\Public</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGUnitConnector.h">
+      <Filter>Source\FactoryGame\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGUnitConnectorComponent.h">
       <Filter>Source\FactoryGame\Public</Filter>
     </ClInclude>
   </ItemGroup>

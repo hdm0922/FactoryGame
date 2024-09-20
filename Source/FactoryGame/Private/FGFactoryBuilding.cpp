@@ -177,6 +177,19 @@ void AFGFactoryBuilding::ProduceOutput()
 	return;
 }
 
+void AFGFactoryBuilding::SetInputConnectorsProperty()
+{
+	for (int32 iter = 0; iter < this->InputConnectors.Num(); iter++)
+	{
+		FVector RelativeLocation = FVector();
+		this->InputConnectors[iter]->SetActorRelativeLocation(RelativeLocation);
+	}
+}
+
+void AFGFactoryBuilding::SetOutputConnectorsProperty()
+{
+}
+
 bool AFGFactoryBuilding::CanWork()
 {
 	return Super::CanWork() && this->Recipe;
@@ -201,12 +214,11 @@ void AFGFactoryBuilding::CreateInputConnectors()
 {
 	for (int32 iter = 0; iter < this->InputConnectors.Num(); iter++)
 	{
-		// Temporary Location
-		FVector ConnectorLocation = FVector(-50.0f, -50.0f + (10.0f * iter), 0.0f);
-
-		this->InputConnectors[iter] = this->CreateConnector(ConnectorLocation);
+		this->InputConnectors[iter] = this->CreateConnector(FVector());
 		this->InputConnectors[iter]->SetOutputUnit(this);
 	}
+
+	this->SetInputConnectorsProperty();
 
 	return;
 }
@@ -215,12 +227,11 @@ void AFGFactoryBuilding::CreateOutputConnectors()
 {
 	for (int32 iter = 0; iter < this->OutputConnectors.Num(); iter++)
 	{
-		// Temporary Location
-		FVector ConnectorLocation = FVector(50.0f, -50.0f + (10.0f * iter), 0.0f);
-
-		this->OutputConnectors[iter] = this->CreateConnector(ConnectorLocation);
+		this->OutputConnectors[iter] = this->CreateConnector(FVector());
 		this->OutputConnectors[iter]->SetInputUnit(this);
 	}
+
+	this->SetOutputConnectorsProperty();
 
 	return;
 }

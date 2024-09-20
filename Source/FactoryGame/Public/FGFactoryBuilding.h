@@ -5,6 +5,7 @@
 #include "FGFactoryBuilding.generated.h"
 
 class AFGUnitConnector;
+class UFGConnectorComponent;
 class UFGItemSlot;
 class UFGRecipe;
 
@@ -36,6 +37,9 @@ protected:
 
 	virtual void InitializeStaticMeshComponent() override;
 	virtual void ProduceOutput();
+
+	virtual void SetInputConnectorsProperty();
+	virtual void SetOutputConnectorsProperty();
 
 	virtual bool CanWork() override;
 

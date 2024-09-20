@@ -43,6 +43,5 @@ void AFGUnitConnector::InitializeStaticMeshComponent()
 	this->StaticMeshComponent->SetStaticMesh(CubeMesh.Object);
 
 	return;
-
 }
 
