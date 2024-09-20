@@ -29,8 +29,11 @@ public:
 	virtual void NotifyInputChanged() override;
 	virtual void NotifyOutputChanged() override;
 
+	// For InputItemSlots
 	virtual void StoreItem(UFGItem* InItem, uint32 InLoadSize = 1) override;
+	// For OutputItemSlots
 	virtual void RemoveItem(UFGItem* InItem, uint32 InLoadSize = 1) override;
+	// Check InputItemSlots
 	virtual bool CanStoreItem(UFGItem* InItem, uint32 InLoadSize = 1) override;
 	// Check OutputItemSlots
 	virtual bool CanRemoveItem(UFGItem* InItem, uint32 InLoadSize = 1) override;

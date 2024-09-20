@@ -93,11 +93,17 @@ void AFGFactoryBuilding::NotifyOutputChanged()
 void AFGFactoryBuilding::StoreItem(UFGItem* InItem, uint32 InLoadSize)
 {
 	this->InputItemSlots[InItem->ItemID]->Store(InItem, InLoadSize);
+
+	for (UFGUnitConnectorComponent* InputConnector : this->InputConnectors)
+		InputConnector->NotifyOutputChanged();
 }
 
 void AFGFactoryBuilding::RemoveItem(UFGItem* InItem, uint32 InLoadSize)
 {
 	this->OutputItemSlots[InItem->ItemID]->Remove(InLoadSize);
+
+	for (UFGUnitConnectorComponent* OutputConnector : this->OutputConnectors)
+		OutputConnector->NotifyInputChanged();
 }
 
 bool AFGFactoryBuilding::CanStoreItem(UFGItem* InItem, uint32 InLoadSize)
