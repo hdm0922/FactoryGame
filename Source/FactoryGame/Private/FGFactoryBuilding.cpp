@@ -3,7 +3,7 @@
 #include "FGGlobalItemTable.h"
 #include "FGRecipe.h"
 #include "FGGlobalRecipeTable.h"
-#include "FGUnitConnector.h"
+#include "FGUnitConnectorComponent.h"
 
 AFGFactoryBuilding::AFGFactoryBuilding(const uint32 _InputSize, const uint32 _OutputSize)
 	: Super(_InputSize, _OutputSize)
@@ -15,19 +15,15 @@ AFGFactoryBuilding::AFGFactoryBuilding(const uint32 _InputSize, const uint32 _Ou
 
 	, Recipe(nullptr)
 {
-
-	this->InputConnectors.SetNum(_InputSize);
-	this->OutputConnectors.SetNum(_OutputSize);
-
 	this->InitializeStaticMeshComponent();
+
+	this->CreateInputConnectors(_InputSize);
+	this->CreateOutputConnectors(_OutputSize);
 }
 
 void AFGFactoryBuilding::BeginPlay()
 {
 	Super::BeginPlay();
-
-	this->CreateInputConnectors();
-	this->CreateOutputConnectors();
 
 	{// Some Test Codes Coming In ...
 		this->SelectRecipe(1);
@@ -133,7 +129,7 @@ void AFGFactoryBuilding::SelectRecipe(UFGRecipe* _Recipe)
 	}
 
 	// Notify InputConnectors
-	for (AFGUnitConnector* InputConnector : this->InputConnectors)
+	for (UFGUnitConnectorComponent* InputConnector : this->InputConnectors)
 		InputConnector->NotifyOutputChanged();
 
 	// Set OutputItems Context
@@ -146,7 +142,7 @@ void AFGFactoryBuilding::SelectRecipe(UFGRecipe* _Recipe)
 	}
 
 	// Notify OutputConnectors
-	for (AFGUnitConnector* OutputConnector : this->OutputConnectors)
+	for (UFGUnitConnectorComponent* OutputConnector : this->OutputConnectors)
 		OutputConnector->NotifyInputChanged();
 }
 
@@ -160,7 +156,7 @@ void AFGFactoryBuilding::ProduceOutput()
 	}
 		
 	// Notify InputConnectors
-	for (AFGUnitConnector* InputConnector : this->InputConnectors)
+	for (UFGUnitConnectorComponent* InputConnector : this->InputConnectors)
 		InputConnector->NotifyOutputChanged();
 
 	// Store Output Items
@@ -171,23 +167,10 @@ void AFGFactoryBuilding::ProduceOutput()
 	}
 
 	// NotifyOutputConnectors
-	for (AFGUnitConnector* OutputConnector : this->OutputConnectors)
+	for (UFGUnitConnectorComponent* OutputConnector : this->OutputConnectors)
 		OutputConnector->NotifyInputChanged();
 
 	return;
-}
-
-void AFGFactoryBuilding::SetInputConnectorsProperty()
-{
-	for (int32 iter = 0; iter < this->InputConnectors.Num(); iter++)
-	{
-		FVector RelativeLocation = FVector();
-		this->InputConnectors[iter]->SetActorRelativeLocation(RelativeLocation);
-	}
-}
-
-void AFGFactoryBuilding::SetOutputConnectorsProperty()
-{
 }
 
 bool AFGFactoryBuilding::CanWork()
@@ -195,43 +178,67 @@ bool AFGFactoryBuilding::CanWork()
 	return Super::CanWork() && this->Recipe;
 }
 
-AFGUnitConnector* AFGFactoryBuilding::CreateConnector(const FVector& _Location)
+void AFGFactoryBuilding::CreateInputConnectors(const uint32 _InputSize)
 {
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Owner = this;
+	this->InputConnectors.SetNum(_InputSize);
 
-	AFGUnitConnector* ConnectorCreated = this->GetWorld()->SpawnActor<AFGUnitConnector>(
-		_Location, FRotator::ZeroRotator, SpawnParams
-	);
-
-	ConnectorCreated->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-
-	return ConnectorCreated;
-}
-
-void AFGFactoryBuilding::CreateInputConnectors()
-{
 	for (int32 iter = 0; iter < this->InputConnectors.Num(); iter++)
 	{
-		this->InputConnectors[iter] = this->CreateConnector(FVector());
+		FString ConnectorName = FString::Printf(TEXT("InputConnector_%d"), iter);
+		this->InputConnectors[iter] = this->CreateDefaultSubobject<UFGUnitConnectorComponent>(FName(*ConnectorName));
 		this->InputConnectors[iter]->SetOutputUnit(this);
 	}
 
-	this->SetInputConnectorsProperty();
+	// Set Connector Transforms
+	FVector Origin;
+	FVector BoxExtent;
+	this->GetActorBounds(true, Origin, BoxExtent);
+
+	const FVector LeftEnd = -FVector(BoxExtent[0], BoxExtent[1], 0.5f * BoxExtent[2]);
+	this->PlaceConnectorsArray(LeftEnd, this->InputConnectors);
 
 	return;
 }
 
-void AFGFactoryBuilding::CreateOutputConnectors()
+void AFGFactoryBuilding::CreateOutputConnectors(const uint32 _OutputSize)
 {
+	this->OutputConnectors.SetNum(_OutputSize);
+
 	for (int32 iter = 0; iter < this->OutputConnectors.Num(); iter++)
 	{
-		this->OutputConnectors[iter] = this->CreateConnector(FVector());
+		FString ConnectorName = FString::Printf(TEXT("OutputConnector_%d"), iter);
+		this->OutputConnectors[iter] = this->CreateDefaultSubobject<UFGUnitConnectorComponent>(FName(*ConnectorName));
 		this->OutputConnectors[iter]->SetInputUnit(this);
 	}
 
-	this->SetOutputConnectorsProperty();
+	// Set Connector Transforms
+	FVector Origin;
+	FVector BoxExtent;
+	this->GetActorBounds(true, Origin, BoxExtent);
+
+	const FVector LeftEnd = FVector(BoxExtent[0], -BoxExtent[1], -0.5f * BoxExtent[2]);
+	this->PlaceConnectorsArray(LeftEnd, this->OutputConnectors);
+
+	return;
+}
+
+void AFGFactoryBuilding::PlaceConnectorsArray(const FVector& _BeginLocation, TArray<UFGUnitConnectorComponent*>& _ConnectorsArray)
+{
+	FVector Origin;
+	FVector BoxExtent;
+	this->GetActorBounds(true, Origin, BoxExtent);
+
+	const float LineLength = 2.0f * BoxExtent[1];
+	const uint32 ConnectorsCount = _ConnectorsArray.Num();
+	const float ConnectorHalfLength = UFGUnitConnectorComponent::GetUnitConnectorHalfLength();
+	const float DistanceBetweenConnectors = (LineLength - 2.0f * ConnectorsCount * ConnectorHalfLength) / (ConnectorsCount + 1);
+
+	FVector ConnectorLocation = _BeginLocation - FVector(0.0f, ConnectorHalfLength, 0.0f);
+	for (int32 iter = 0; iter < _ConnectorsArray.Num(); iter++)
+	{
+		ConnectorLocation[1] += (DistanceBetweenConnectors + 2.0f * ConnectorHalfLength);
+		_ConnectorsArray[iter]->SetStaticMeshComponentProperty(ConnectorLocation);
+	}
 
 	return;
 }

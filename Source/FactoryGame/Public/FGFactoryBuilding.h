@@ -4,8 +4,7 @@
 #include "FGFactoryUnit.h"
 #include "FGFactoryBuilding.generated.h"
 
-class AFGUnitConnector;
-class UFGConnectorComponent;
+class UFGUnitConnectorComponent;
 class UFGItemSlot;
 class UFGRecipe;
 
@@ -16,7 +15,7 @@ class FACTORYGAME_API AFGFactoryBuilding : public AFGFactoryUnit
 	
 public:
 
-	AFGFactoryBuilding() : AFGFactoryBuilding(1,1) {}
+	AFGFactoryBuilding() : AFGFactoryBuilding(4,1) {}
 	AFGFactoryBuilding(const uint32 _InputSize, const uint32 _OutputSize);
 
 protected:
@@ -38,16 +37,13 @@ protected:
 	virtual void InitializeStaticMeshComponent() override;
 	virtual void ProduceOutput();
 
-	virtual void SetInputConnectorsProperty();
-	virtual void SetOutputConnectorsProperty();
-
 	virtual bool CanWork() override;
 
 private:
 
-	AFGUnitConnector* CreateConnector(const FVector& _Location);
-	void CreateInputConnectors();
-	void CreateOutputConnectors();
+	void CreateInputConnectors(const uint32 _InputSize);
+	void CreateOutputConnectors(const uint32 _OutputSize);
+	void PlaceConnectorsArray(const FVector& _BeginLocation, TArray<UFGUnitConnectorComponent*>& _ConnectorsArray);
 
 	bool IsAllInputsValid() const;
 	bool IsAllOutputsValid() const;
@@ -55,14 +51,14 @@ private:
 public:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
-	TArray<AFGUnitConnector*> InputConnectors;
+	TArray<UFGUnitConnectorComponent*> InputConnectors;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TMap<uint32, UFGItemSlot*> InputItemSlots;
 
 
 	UPROPERTY(EditAnywhere, Category = "Output")
-	TArray<AFGUnitConnector*> OutputConnectors;
+	TArray<UFGUnitConnectorComponent*> OutputConnectors;
 
 	UPROPERTY(EditAnywhere, Category = "Output")
 	TMap<uint32, UFGItemSlot*> OutputItemSlots;

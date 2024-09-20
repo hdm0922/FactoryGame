@@ -21,7 +21,13 @@ protected:
 
 public:	
 
-	void SetStaticMeshComponentProperty(const FVector& _Location, const FRotator& _Rotation = FRotator::ZeroRotator, const FVector& _Scale = FVector(1.0f));
+	// Half Length of Connectors = 25.0f;
+	// Can be calculated by :
+	// 0.5 * (Connector->GetConnectorBound().BoxExtent[1] *
+	// Connector->StaticMeshComponent->GetComponentScale()[1]);
+	static float GetUnitConnectorHalfLength() { return 25.0f; }
+
+	void SetStaticMeshComponentProperty(const FVector& _Location, const FRotator& _Rotation = FRotator::ZeroRotator);
 
 	void NotifyInputChanged();
 	void NotifyOutputChanged();
@@ -31,6 +37,8 @@ public:
 
 	AFGFactoryUnit* GetInputUnit() const { return this->InputUnit; }
 	AFGFactoryUnit* GetOutputUnit() const { return this->OutputUnit; }
+
+	FBoxSphereBounds GetConnectorBound() const { return this->StaticMeshComponent->GetStaticMesh()->GetBounds(); }
 
 private:
 
@@ -44,8 +52,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Connector")
 	AFGFactoryUnit* OutputUnit;
 
+	UPROPERTY(VisibleAnywhere, Category = "Connector")
+	UStaticMeshComponent* StaticMeshComponent;
+
 private:
 
-	UStaticMeshComponent* StaticMeshComponent;
+	
 
 };

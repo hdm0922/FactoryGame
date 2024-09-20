@@ -19,12 +19,11 @@ void UFGUnitConnectorComponent::BeginPlay()
 
 void UFGUnitConnectorComponent::SetStaticMeshComponentProperty(
 	const FVector& _Location,
-	const FRotator& _Rotation,
-	const FVector& _Scale)
+	const FRotator& _Rotation
+)
 {
 	this->StaticMeshComponent->SetRelativeLocation(_Location);
 	this->StaticMeshComponent->SetRelativeRotation(_Rotation);
-	this->StaticMeshComponent->SetRelativeScale3D(_Scale);
 }
 
 void UFGUnitConnectorComponent::NotifyInputChanged()
@@ -47,17 +46,19 @@ void UFGUnitConnectorComponent::InitializeStaticMeshComponent()
 	AActor* Owner = this->GetOwner();
 	if (!Owner) return;
 
-	this->StaticMeshComponent = NewObject<UStaticMeshComponent>(Owner, UStaticMeshComponent::StaticClass());
+	this->StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh_UnitConnector"));
 	if (!this->StaticMeshComponent) return;
-
-	this->StaticMeshComponent->SetupAttachment(Owner->GetRootComponent());
 
 	// Initializing StaticMeshComponent
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
 	this->StaticMeshComponent->SetStaticMesh(CubeMesh.Object);
 
-	// Register StaticMeshComponent
+	this->StaticMeshComponent->SetupAttachment(Owner->GetRootComponent());
 	this->StaticMeshComponent->RegisterComponent();
+
+	// Set World Scale Fixed
+	this->StaticMeshComponent->SetWorldScale3D(FVector(0.05f, 0.15f, 0.08f));
+	this->StaticMeshComponent->SetUsingAbsoluteScale(true);
 
 	return;
 }
