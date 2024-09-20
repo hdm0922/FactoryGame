@@ -11,10 +11,12 @@
     <None Include="..\..\Source\FactoryGameEditor.Target.cs">
       <Filter>Source</Filter>
     </None>
+    <None Include="..\..\.editorconfig" />
     <None Include="..\..\.gitattributes" />
     <None Include="..\..\.gitignore" />
     <None Include="..\..\.vsconfig" />
     <None Include="..\..\README.md" />
+    <None Include="..\..\shadertoolsconfig.json" />
     <None Include="..\..\UpgradeLog.htm" />
     <Filter Include="Config">
       <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
@@ -85,6 +87,9 @@
     <Filter Include="Source\FactoryGame\Private">
       <UniqueIdentifier>{BF297CC9-40D9-3B5F-A5D2-473E5DEA5785}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGConveyorBelt.cpp">
+      <Filter>Source\FactoryGame\Private</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGFactoryBuilding.cpp">
       <Filter>Source\FactoryGame\Private</Filter>
     </ClCompile>
@@ -124,6 +129,9 @@
     <Filter Include="Source\FactoryGame\Public">
       <UniqueIdentifier>{86FBAA01-E659-354A-AC66-0A5357B19FB5}</UniqueIdentifier>
     </Filter>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGConveyorBelt.h">
+      <Filter>Source\FactoryGame\Public</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGFactoryBuilding.h">
       <Filter>Source\FactoryGame\Public</Filter>
     </ClInclude>

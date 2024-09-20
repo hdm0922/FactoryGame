@@ -14,8 +14,7 @@ class FACTORYGAME_API AFGFactoryUnit : public AActor
 	
 public:
 
-	AFGFactoryUnit() : AFGFactoryUnit(0, 0) {};
-	AFGFactoryUnit(const uint32 _InputSize, const uint32 _OutputSize);
+	AFGFactoryUnit();
 
 protected:
 

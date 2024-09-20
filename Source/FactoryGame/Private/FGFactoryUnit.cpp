@@ -1,7 +1,7 @@
 #include "FGFactoryUnit.h"
 #include "FGItem.h"
 
-AFGFactoryUnit::AFGFactoryUnit(const uint32 _InputSize, const uint32 _OutputSize)
+AFGFactoryUnit::AFGFactoryUnit()
 	: Super()
 
 	, StaticMeshComponent(nullptr)

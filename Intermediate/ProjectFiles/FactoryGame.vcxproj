@@ -252,10 +252,12 @@
     <None Include="..\..\FactoryGame.uproject"/>
     <None Include="..\..\Source\FactoryGame.Target.cs"/>
     <None Include="..\..\Source\FactoryGameEditor.Target.cs"/>
+    <None Include="..\..\.editorconfig"/>
     <None Include="..\..\.gitattributes"/>
     <None Include="..\..\.gitignore"/>
     <None Include="..\..\.vsconfig"/>
     <None Include="..\..\README.md"/>
+    <None Include="..\..\shadertoolsconfig.json"/>
     <None Include="..\..\UpgradeLog.htm"/>
     <None Include="..\..\Config\DefaultEditor.ini"/>
     <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini"/>
@@ -291,6 +293,9 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClInclude Include="..\..\Source\FactoryGame\TP_WeaponComponent.h"/>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGConveyorBelt.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGFactoryBuilding.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -327,6 +332,7 @@
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGUnitConnectorComponent.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGConveyorBelt.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGFactoryBuilding.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGFactoryGameInstance.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGFactoryUnit.h"/>
