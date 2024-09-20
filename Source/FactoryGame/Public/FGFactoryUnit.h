@@ -27,10 +27,10 @@ public:
 	virtual void NotifyInputChanged();
 	virtual void NotifyOutputChanged();
 
-	virtual void StoreItem(UFGItemStorage* _ItemStorage, UFGItem* _Item);
-	virtual void RemoveItem(UFGItemStorage* _ItemStorage, UFGItem* _Item);
-	virtual bool CanStoreItem(UFGItemStorage* _ItemStorage, UFGItem* _Item);
-	virtual bool CanRemoveItem(UFGItemStorage* _ItemStorage, UFGItem* _Item);
+	virtual void StoreItem(UFGItem* InItem, uint32 InLoadSize = 1);
+	virtual void RemoveItem(UFGItem* InItem, uint32 InLoadSize = 1);
+	virtual bool CanStoreItem(UFGItem* InItem, uint32 InLoadSize = 1);
+	virtual bool CanRemoveItem(UFGItem* InItem, uint32 InLoadSize = 1);
 
 protected:
 

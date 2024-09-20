@@ -42,23 +42,23 @@ void AFGFactoryUnit::NotifyOutputChanged()
 {
 }
 
-void AFGFactoryUnit::StoreItem(UFGItemStorage* _ItemStorage, UFGItem* _Item)
+void AFGFactoryUnit::StoreItem(UFGItem* InItem, uint32 InLoadSize)
 {
 	checkf(false, TEXT("ABSTRACT"));
 }
 
-void AFGFactoryUnit::RemoveItem(UFGItemStorage* _ItemStorage, UFGItem* _Item)
+void AFGFactoryUnit::RemoveItem(UFGItem* InItem, uint32 InLoadSize)
 {
 	checkf(false, TEXT("ABSTRACT"));
 }
 
-bool AFGFactoryUnit::CanStoreItem(UFGItemStorage* _ItemStorage, UFGItem* _Item)
+bool AFGFactoryUnit::CanStoreItem(UFGItem* InItem, uint32 InLoadSize)
 {
 	checkf(false, TEXT("ABSTRACT"));
 	return false;
 }
 
-bool AFGFactoryUnit::CanRemoveItem(UFGItemStorage* _ItemStorage, UFGItem* _Item)
+bool AFGFactoryUnit::CanRemoveItem(UFGItem* InItem, uint32 InLoadSize)
 {
 	checkf(false, TEXT("ABSTRACT"));
 	return false;

@@ -29,6 +29,12 @@ public:
 	virtual void NotifyInputChanged() override;
 	virtual void NotifyOutputChanged() override;
 
+	virtual void StoreItem(UFGItem* InItem, uint32 InLoadSize = 1) override;
+	virtual void RemoveItem(UFGItem* InItem, uint32 InLoadSize = 1) override;
+	virtual bool CanStoreItem(UFGItem* InItem, uint32 InLoadSize = 1) override;
+	// Check OutputItemSlots
+	virtual bool CanRemoveItem(UFGItem* InItem, uint32 InLoadSize = 1) override;
+
 	void SelectRecipe(uint32 _RecipeID);
 	void SelectRecipe(UFGRecipe* _Recipe);
 

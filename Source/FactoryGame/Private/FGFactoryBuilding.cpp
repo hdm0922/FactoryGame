@@ -6,7 +6,7 @@
 #include "FGUnitConnectorComponent.h"
 
 AFGFactoryBuilding::AFGFactoryBuilding(const uint32 _InputSize, const uint32 _OutputSize)
-	: Super(_InputSize, _OutputSize)
+	: Super()
 	, InputConnectors({})
 	, InputItemSlots({})
 
@@ -87,6 +87,31 @@ void AFGFactoryBuilding::NotifyOutputChanged()
 	this->UpdateRunningState();
 
 	return;
+
+}
+
+void AFGFactoryBuilding::StoreItem(UFGItem* InItem, uint32 InLoadSize)
+{
+	this->InputItemSlots[InItem->ItemID]->Store(InItem, InLoadSize);
+}
+
+void AFGFactoryBuilding::RemoveItem(UFGItem* InItem, uint32 InLoadSize)
+{
+	this->OutputItemSlots[InItem->ItemID]->Remove(InLoadSize);
+}
+
+bool AFGFactoryBuilding::CanStoreItem(UFGItem* InItem, uint32 InLoadSize)
+{
+	return 
+		this->InputItemSlots.Contains(InItem->ItemID) &&
+		this->InputItemSlots[InItem->ItemID]->CanStore(InItem, InLoadSize);
+}
+
+bool AFGFactoryBuilding::CanRemoveItem(UFGItem* InItem, uint32 InLoadSize)
+{
+	return 
+		this->OutputItemSlots.Contains(InItem->ItemID) &&
+		this->OutputItemSlots[InItem->ItemID]->CanStore(InItem, InLoadSize);
 
 }
 
