@@ -10,8 +10,10 @@ AFGConveyorBelt::AFGConveyorBelt(const uint32 InTransportVolumePerMinute)
 
 	, bCanSpawnAnotherItem(true)
 	, TransportVolumePerMinute(InTransportVolumePerMinute)
-	, TransportingItems(nullptr)
+	, TransportingItems({})
+	, ItemActorOverlappingOutputConnector(nullptr)
 {
+	this->WorkTime = this->GetCycleTime();
 }
 
 void AFGConveyorBelt::Work(float DeltaTime)
@@ -19,21 +21,47 @@ void AFGConveyorBelt::Work(float DeltaTime)
 	Super::Work(DeltaTime);
 
 	if (!this->IsCycleReturned()) return;
-	this->WorkTime = 0.0f;
 
+	// 주기가 돌았으면, Fetch 조건을 확인한다.
+	// Fetch가 가능하다면 Fetch 연산 수행 후 WorkTime 초기화.
+	// Fetch가 불가능하다면 Tick 끄기
+
+	const bool BCanFetchItem = this->bCanSpawnAnotherItem && this->InputConnector->CanFetchItem();
+	if (BCanFetchItem)
+	{
+		UFGItem* ItemFetched = this->InputConnector->FetchItem();
+		this->CreateItemActorComponent(ItemFetched);
+		this->WorkTime = 0.0f;
+	}
+	else
+	{
+		this->SetActorTickEnabled(false);
+	}
+
+	return;
 }
 
 void AFGConveyorBelt::NotifyInputChanged()
 {
 	const bool BNewInputValid = this->InputConnector->CanFetchItem();
-	if (this->bInputsValid == BNewInputValid) return;
-
 	this->bInputsValid = BNewInputValid;
-	this->UpdateRunningState();
+	
+	this->SetActorTickEnabled(BNewInputValid);
 }
 
 void AFGConveyorBelt::NotifyOutputChanged()
 {
+	if (!this->ItemActorOverlappingOutputConnector) return;
+
+	this->bOutputsValid = 
+		this->OutputConnector->CanSendItem(
+		this->ItemActorOverlappingOutputConnector->GetItemData()
+	);
+
+	if (this->bOutputsValid) 
+		this->RemoveItemActorComponent(this->ItemActorOverlappingOutputConnector);
+
+	return;
 }
 
 void AFGConveyorBelt::HandleItemActorOverlapBeginEvent(
@@ -41,7 +69,8 @@ void AFGConveyorBelt::HandleItemActorOverlapBeginEvent(
 	UFGItemActorComponent* InItemActor2
 )
 {
-	check(false);
+	InItemActor1->SetComponentTickEnabled(false);
+	InItemActor2->SetComponentTickEnabled(false);
 	return;
 }
 
@@ -50,7 +79,19 @@ void AFGConveyorBelt::HandleItemActorOverlapBeginEvent(
 	UFGUnitConnectorComponent* InUnitConnector
 )
 {
-	check(false);
+	const bool BOverlapWithInputConnector = (InUnitConnector == this->InputConnector);
+	const bool BOverlapWithOutputConnector = (InUnitConnector == this->OutputConnector);
+
+	if (BOverlapWithInputConnector) 
+		this->bCanSpawnAnotherItem = false;
+
+	else if (BOverlapWithOutputConnector)
+	{
+		this->ItemActorOverlappingOutputConnector = InItemActor;
+		this->bOutputsValid = this->OutputConnector->CanSendItem(InItemActor->GetItemData());
+		if (this->bOutputsValid) this->RemoveItemActorComponent(InItemActor);
+	}
+		
 	return;
 }
 
@@ -59,7 +100,8 @@ void AFGConveyorBelt::HandleItemActorOverlapEndEvent(
 	UFGItemActorComponent* InItemActor2
 )
 {
-	check(false);
+	InItemActor1->SetComponentTickEnabled(true);
+	InItemActor2->SetComponentTickEnabled(true);
 	return;
 }
 
@@ -74,10 +116,24 @@ void AFGConveyorBelt::HandleItemActorOverlapEndEvent(
 	return;
 }
 
+void AFGConveyorBelt::RemoveItemActorComponent(UFGItemActorComponent* InItemActorComponent)
+{
+	// Give OutputConnector the Item
+	this->OutputConnector->SendItem(InItemActorComponent->GetItemData());
+
+	// Delete ItemActor From TSet
+	this->TransportingItems.Remove(InItemActorComponent);
+
+	// Delete ItemActor Completely
+	InItemActorComponent->DestroyComponent();
+	InItemActorComponent = nullptr;
+
+	return;
+}
+
 bool AFGConveyorBelt::IsCycleReturned() const
 {
-	const float CycleTime = (60.0f / this->TransportVolumePerMinute);
-	return (this->WorkTime > CycleTime);
+	return (this->WorkTime > this->GetCycleTime());
 }
 
 const FVector AFGConveyorBelt::GetTransportDirection() const
@@ -108,5 +164,7 @@ void AFGConveyorBelt::CreateItemActorComponent(UFGItem* InItem)
 	ItemActorCreated->SetTransportingConveyor(this);
 	ItemActorCreated->SetItemData(InItem);
 
-	this->TransportingItems = new TList<UFGItemActorComponent*>(ItemActorCreated, this->TransportingItems);
+	this->TransportingItems.Add(ItemActorCreated);
+	
+	return;
 }

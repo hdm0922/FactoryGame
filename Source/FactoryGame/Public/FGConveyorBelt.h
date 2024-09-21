@@ -27,8 +27,11 @@ public:
 	void HandleItemActorOverlapEndEvent(UFGItemActorComponent* InItemActor, UFGItemActorComponent* InItemActor2);
 	void HandleItemActorOverlapEndEvent(UFGItemActorComponent* InItemActor, UFGUnitConnectorComponent* InUnitConnector);
 
+	void RemoveItemActorComponent(UFGItemActorComponent* InItemActorComponent);
+
 	bool IsCycleReturned() const;
 
+	const float GetCycleTime() const { return 60.0f / this->TransportVolumePerMinute; }
 	const FVector GetTransportDirection() const;
 
 private:
@@ -50,5 +53,7 @@ private:
 	bool bCanSpawnAnotherItem;
 
 	uint32 TransportVolumePerMinute;
-	TList<UFGItemActorComponent*>* TransportingItems;
+	TSet<UFGItemActorComponent*> TransportingItems;
+
+	UFGItemActorComponent* ItemActorOverlappingOutputConnector;
 };

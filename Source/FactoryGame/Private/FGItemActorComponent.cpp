@@ -4,6 +4,8 @@
 
 UFGItemActorComponent::UFGItemActorComponent()
 	: Super()
+	, StaticMeshComponent(nullptr)
+	, LastOverlappedItemActorComponent(nullptr)
 	, ItemData(nullptr)
 	, TransportingConveyor(nullptr)
 {
@@ -18,6 +20,20 @@ void UFGItemActorComponent::BeginPlay()
 	
 }
 
+void UFGItemActorComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
+{
+	Super::OnComponentDestroyed(bDestroyingHierarchy);
+	
+	if (!this->LastOverlappedItemActorComponent) return;
+
+	this->LastOverlappedItemActorComponent->LastOverlappedItemActorComponent = nullptr;
+	this->LastOverlappedItemActorComponent->SetComponentTickEnabled(true);
+	this->LastOverlappedItemActorComponent->TransportingConveyor->
+		HandleItemActorOverlapEndEvent(this, this->LastOverlappedItemActorComponent);
+		
+	return;
+}
+
 
 void UFGItemActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -26,11 +42,6 @@ void UFGItemActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	const float Speed = 100.0f;
 	const FVector DeltaPosition = this->TransportingConveyor->GetTransportDirection() * Speed * DeltaTime;
 	this->SetRelativeLocation(this->GetRelativeLocation() + DeltaPosition);
-}
-
-void UFGItemActorComponent::NotifyPrevItemDestroyed()
-{
-	this->SetComponentTickEnabled(true);
 }
 
 void UFGItemActorComponent::OnOverlapBegin(
@@ -45,8 +56,11 @@ void UFGItemActorComponent::OnOverlapBegin(
 	UFGItemActorComponent* ItemActorComponentOverlapped = Cast<UFGItemActorComponent>(OverlappedComponent);
 	if (ItemActorComponentOverlapped &&
 		(this->TransportingConveyor == ItemActorComponentOverlapped->TransportingConveyor))
+	{
+		this->LastOverlappedItemActorComponent = ItemActorComponentOverlapped;
 		this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, ItemActorComponentOverlapped);
-
+	}
+		
 	UFGUnitConnectorComponent* UnitConnectorOverlapped = Cast<UFGUnitConnectorComponent>(OverlappedComponent);
 	if (UnitConnectorOverlapped) this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, UnitConnectorOverlapped);
 
@@ -61,7 +75,12 @@ void UFGItemActorComponent::OnOverlapEnd(
 )
 {
 	UFGItemActorComponent* ItemActorComponentOverlapped = Cast<UFGItemActorComponent>(OverlappedComponent);
-	if (ItemActorComponentOverlapped) this->TransportingConveyor->HandleItemActorOverlapEndEvent(this, ItemActorComponentOverlapped);
+	if (ItemActorComponentOverlapped == this->LastOverlappedItemActorComponent)
+	{
+		this->LastOverlappedItemActorComponent = nullptr;
+		this->SetComponentTickEnabled(true);
+		this->TransportingConveyor->HandleItemActorOverlapEndEvent(this, ItemActorComponentOverlapped);
+	}
 
 	UFGUnitConnectorComponent* UnitConnectorOverlapped = Cast<UFGUnitConnectorComponent>(OverlappedComponent);
 	if (UnitConnectorOverlapped) this->TransportingConveyor->HandleItemActorOverlapEndEvent(this, UnitConnectorOverlapped);

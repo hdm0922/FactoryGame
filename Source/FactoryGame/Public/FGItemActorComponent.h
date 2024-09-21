@@ -19,12 +19,11 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
 
 public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void NotifyPrevItemDestroyed();
 	void SetTransportingConveyor(AFGConveyorBelt* InConveyorBelt) { this->TransportingConveyor = InConveyorBelt; }
 
 	UFUNCTION()
@@ -36,6 +35,7 @@ public:
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	void SetItemData(UFGItem* InItem) { this->ItemData = InItem; }
+	UFGItem* GetItemData() const { return this->ItemData; }
 
 private:
 
@@ -44,6 +44,7 @@ private:
 private:
 
 	UStaticMeshComponent* StaticMeshComponent;
+	UFGItemActorComponent* LastOverlappedItemActorComponent;
 
 	UFGItem* ItemData;
 	AFGConveyorBelt* TransportingConveyor;
