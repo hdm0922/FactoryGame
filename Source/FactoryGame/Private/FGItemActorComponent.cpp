@@ -11,7 +11,7 @@ UFGItemActorComponent::UFGItemActorComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
-	
+	this->SetStaticMesh();
 }
 
 void UFGItemActorComponent::BeginPlay()
@@ -44,6 +44,12 @@ void UFGItemActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	this->SetRelativeLocation(this->GetRelativeLocation() + DeltaPosition);
 }
 
+void UFGItemActorComponent::SetTransportingConveyor(AFGConveyorBelt* InConveyorBelt)
+{
+	this->TransportingConveyor = InConveyorBelt;
+	return;
+}
+
 void UFGItemActorComponent::OnOverlapBegin(
 	UPrimitiveComponent* OverlappedComponent, 
 	AActor* OtherActor, 
@@ -53,16 +59,23 @@ void UFGItemActorComponent::OnOverlapBegin(
 	const FHitResult& SweepResult
 )
 {
-	UFGItemActorComponent* ItemActorComponentOverlapped = Cast<UFGItemActorComponent>(OverlappedComponent);
+	UStaticMeshComponent* OverlappedStaticMeshComponent = Cast<UStaticMeshComponent>(OverlappedComponent);
+	if (!OverlappedStaticMeshComponent) return;
+
+	UFGItemActorComponent* ItemActorComponentOverlapped = 
+		this->TransportingConveyor->GetItemActorComponent(OverlappedStaticMeshComponent);
+
 	if (ItemActorComponentOverlapped &&
 		(this->TransportingConveyor == ItemActorComponentOverlapped->TransportingConveyor))
 	{
 		this->LastOverlappedItemActorComponent = ItemActorComponentOverlapped;
 		this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, ItemActorComponentOverlapped);
 	}
-		
-	UFGUnitConnectorComponent* UnitConnectorOverlapped = Cast<UFGUnitConnectorComponent>(OverlappedComponent);
-	if (UnitConnectorOverlapped) this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, UnitConnectorOverlapped);
+	
+	if (OverlappedStaticMeshComponent == this->TransportingConveyor->InputConnector->StaticMeshComponent)
+		this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, this->TransportingConveyor->InputConnector);
+	else if (OverlappedStaticMeshComponent == this->TransportingConveyor->OutputConnector->StaticMeshComponent)
+		this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, this->TransportingConveyor->OutputConnector);
 
 	return;
 }
@@ -74,7 +87,12 @@ void UFGItemActorComponent::OnOverlapEnd(
 	int32 OtherBodyIndex
 )
 {
-	UFGItemActorComponent* ItemActorComponentOverlapped = Cast<UFGItemActorComponent>(OverlappedComponent);
+	UStaticMeshComponent* OverlappedStaticMeshComponent = Cast<UStaticMeshComponent>(OverlappedComponent);
+	if (!OverlappedStaticMeshComponent) return;
+
+	UFGItemActorComponent* ItemActorComponentOverlapped =
+		this->TransportingConveyor->GetItemActorComponent(OverlappedStaticMeshComponent);
+
 	if (ItemActorComponentOverlapped == this->LastOverlappedItemActorComponent)
 	{
 		this->LastOverlappedItemActorComponent = nullptr;
@@ -82,8 +100,10 @@ void UFGItemActorComponent::OnOverlapEnd(
 		this->TransportingConveyor->HandleItemActorOverlapEndEvent(this, ItemActorComponentOverlapped);
 	}
 
-	UFGUnitConnectorComponent* UnitConnectorOverlapped = Cast<UFGUnitConnectorComponent>(OverlappedComponent);
-	if (UnitConnectorOverlapped) this->TransportingConveyor->HandleItemActorOverlapEndEvent(this, UnitConnectorOverlapped);
+	if (OverlappedStaticMeshComponent == this->TransportingConveyor->InputConnector->StaticMeshComponent)
+		this->TransportingConveyor->HandleItemActorOverlapEndEvent(this, this->TransportingConveyor->InputConnector);
+	else if (OverlappedStaticMeshComponent == this->TransportingConveyor->OutputConnector->StaticMeshComponent)
+		this->TransportingConveyor->HandleItemActorOverlapEndEvent(this, this->TransportingConveyor->OutputConnector);
 
 	return;
 }

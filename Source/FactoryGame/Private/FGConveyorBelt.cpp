@@ -122,7 +122,7 @@ void AFGConveyorBelt::RemoveItemActorComponent(UFGItemActorComponent* InItemActo
 	this->OutputConnector->SendItem(InItemActorComponent->GetItemData());
 
 	// Delete ItemActor From TSet
-	this->TransportingItems.Remove(InItemActorComponent);
+	this->TransportingItems.Remove(InItemActorComponent->GetStaticMesh());
 
 	// Delete ItemActor Completely
 	InItemActorComponent->DestroyComponent();
@@ -164,7 +164,7 @@ void AFGConveyorBelt::CreateItemActorComponent(UFGItem* InItem)
 	ItemActorCreated->SetTransportingConveyor(this);
 	ItemActorCreated->SetItemData(InItem);
 
-	this->TransportingItems.Add(ItemActorCreated);
+	this->TransportingItems.Add(ItemActorCreated->GetStaticMesh(), ItemActorCreated);
 	
 	return;
 }

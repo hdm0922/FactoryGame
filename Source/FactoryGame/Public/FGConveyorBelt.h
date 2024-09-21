@@ -33,6 +33,7 @@ public:
 
 	const float GetCycleTime() const { return 60.0f / this->TransportVolumePerMinute; }
 	const FVector GetTransportDirection() const;
+	UFGItemActorComponent* GetItemActorComponent(UStaticMeshComponent* InStaticMesh) { return this->TransportingItems[InStaticMesh]; }
 
 private:
 
@@ -53,7 +54,7 @@ private:
 	bool bCanSpawnAnotherItem;
 
 	uint32 TransportVolumePerMinute;
-	TSet<UFGItemActorComponent*> TransportingItems;
+	TMap<UStaticMeshComponent*, UFGItemActorComponent*> TransportingItems;
 
 	UFGItemActorComponent* ItemActorOverlappingOutputConnector;
 };

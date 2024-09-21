@@ -24,7 +24,7 @@ protected:
 public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void SetTransportingConveyor(AFGConveyorBelt* InConveyorBelt) { this->TransportingConveyor = InConveyorBelt; }
+	void SetTransportingConveyor(AFGConveyorBelt* InConveyorBelt);
 
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -36,6 +36,7 @@ public:
 
 	void SetItemData(UFGItem* InItem) { this->ItemData = InItem; }
 	UFGItem* GetItemData() const { return this->ItemData; }
+	UStaticMeshComponent* GetStaticMesh() const { return this->StaticMeshComponent; }
 
 private:
 
