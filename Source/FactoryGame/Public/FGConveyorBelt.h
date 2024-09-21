@@ -4,7 +4,7 @@
 #include "FGFactoryUnit.h"
 #include "FGConveyorBelt.generated.h"
 
-class AFGItemActorComponent;
+class UFGItemActorComponent;
 class UFGUnitConnectorComponent;
 
 UCLASS()
@@ -21,7 +21,16 @@ public:
 	virtual void NotifyInputChanged() override;
 	virtual void NotifyOutputChanged() override;
 
+	// InItemActor와 그 직전 ItemActor의 충돌을 처리한다.
+	void HandleItemActorOverlapBeginEvent(UFGItemActorComponent* InItemActor1, UFGItemActorComponent* InItemActor2);
+	void HandleItemActorOverlapBeginEvent(UFGItemActorComponent* InItemActor, UFGUnitConnectorComponent* InUnitConnector);
+
+	void HandleItemActorOverlapEndEvent(UFGItemActorComponent* InItemActor, UFGItemActorComponent* InItemActor2);
+	void HandleItemActorOverlapEndEvent(UFGItemActorComponent* InItemActor, UFGUnitConnectorComponent* InUnitConnector);
+
 	bool IsCycleReturned() const;
+
+	const FVector GetTransportDirection() const;
 
 public:
 
@@ -33,10 +42,8 @@ public:
 
 private:
 
-	bool bReceivedSleepRequest;
+	bool bCanSpawnAnotherItem;
 
 	uint32 TransportVolumePerMinute;
-	uint32 NumberOfItemsSleeping;
-
-	TList<AFGItemActorComponent*> TransportingItems;
+	TLinkedList<UFGItemActorComponent*> TransportingItems;
 };

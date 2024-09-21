@@ -64,6 +64,12 @@ bool AFGFactoryUnit::CanRemoveItem(UFGItem* InItem, uint32 InLoadSize)
 	return false;
 }
 
+UFGItem* AFGFactoryUnit::GetItemSample() const
+{
+	checkf(false, TEXT("ABSTRACT"));
+	return nullptr;
+}
+
 void AFGFactoryUnit::InitializeStaticMeshComponent()
 {
 	this->StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));

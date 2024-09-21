@@ -17,6 +17,30 @@ void UFGUnitConnectorComponent::BeginPlay()
 	Super::BeginPlay();	
 }
 
+UFGItem* UFGUnitConnectorComponent::FetchItem()
+{
+
+	UFGItem* FetchedItem = this->InputUnit->GetItemSample();
+	this->InputUnit->RemoveItem(FetchedItem);
+
+	return FetchedItem;
+}
+
+bool UFGUnitConnectorComponent::CanFetchItem()
+{
+	return (this->InputUnit && this->InputUnit->CanRemoveItem(nullptr));
+}
+
+void UFGUnitConnectorComponent::SendItem(UFGItem* InItem)
+{
+	this->OutputUnit->StoreItem(InItem);
+}
+
+bool UFGUnitConnectorComponent::CanSendItem(UFGItem* InItem)
+{
+	return (this->OutputUnit && this->OutputUnit->CanStoreItem(InItem));
+}
+
 void UFGUnitConnectorComponent::SetStaticMeshComponentProperty(
 	const FVector& _Location,
 	const FRotator& _Rotation

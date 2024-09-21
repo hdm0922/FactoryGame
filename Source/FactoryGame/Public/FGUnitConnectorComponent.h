@@ -5,6 +5,7 @@
 #include "FGUnitConnectorComponent.generated.h"
 
 class AFGFactoryUnit;
+class UFGItem;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FACTORYGAME_API UFGUnitConnectorComponent : public UActorComponent
@@ -27,6 +28,14 @@ public:
 	// Connector->StaticMeshComponent->GetComponentScale()[1]);
 	static float GetUnitConnectorHalfLength() { return 25.0f; }
 
+	// InputUnit으로부터 아이템을 가져와본다. 실패하면 nullptr
+	UFGItem* FetchItem();
+	bool CanFetchItem();
+
+	// OutputUnit으로 아이템을 보내본다. 성공하면 true
+	void SendItem(UFGItem* InItem);
+	bool CanSendItem(UFGItem* InItem);
+
 	void SetStaticMeshComponentProperty(const FVector& _Location, const FRotator& _Rotation = FRotator::ZeroRotator);
 
 	void NotifyInputChanged();
@@ -39,6 +48,7 @@ public:
 	AFGFactoryUnit* GetOutputUnit() const { return this->OutputUnit; }
 
 	FBoxSphereBounds GetConnectorBound() const { return this->StaticMeshComponent->GetStaticMesh()->GetBounds(); }
+	FVector GetWorldLocation() const { return this->StaticMeshComponent->GetComponentLocation(); }
 
 private:
 

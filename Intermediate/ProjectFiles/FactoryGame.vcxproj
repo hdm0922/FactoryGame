@@ -317,6 +317,9 @@
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGItem.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="..\..\Source\FactoryGame\Private\FGItemActorComponent.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="..\..\Source\FactoryGame\Private\FGItemSlot.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -340,6 +343,7 @@
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGGlobalRecipeTable.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGIOGate.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGItem.h"/>
+    <ClInclude Include="..\..\Source\FactoryGame\Public\FGItemActorComponent.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGItemSlot.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGItemStorage.h"/>
     <ClInclude Include="..\..\Source\FactoryGame\Public\FGRecipe.h"/>

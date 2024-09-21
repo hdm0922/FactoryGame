@@ -31,13 +31,14 @@ public:
 	virtual void RemoveItem(UFGItem* InItem, uint32 InLoadSize = 1);
 	virtual bool CanStoreItem(UFGItem* InItem, uint32 InLoadSize = 1);
 	virtual bool CanRemoveItem(UFGItem* InItem, uint32 InLoadSize = 1);
+	virtual UFGItem* GetItemSample() const;
 
 protected:
 
 	virtual void InitializeStaticMeshComponent();
 	virtual bool CanWork();
 
-	void UpdateRunningState();
+	virtual void UpdateRunningState();
 
 protected:
 
