@@ -152,14 +152,8 @@ void AFGConveyorBelt::CreateItemActorComponent(UFGItem* InItem)
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Owner = this;
 
-	UFGItemActorComponent* ItemActorCreated = 
-		this->GetWorld()->SpawnActor<UFGItemActorComponent>(
-			UFGItemActorComponent::StaticClass(),
-			this->InputConnector->GetWorldLocation() -
-			this->GetActorLocation(),
-			FRotator::ZeroRotator,
-			SpawnParams
-		);
+	FString ItemActorComponentName = FString::Printf(TEXT("ItemActor_%d"), this->TransportingItems.Num());
+	UFGItemActorComponent* ItemActorCreated = this->CreateDefaultSubobject<UFGItemActorComponent>(*ItemActorComponentName);
 
 	ItemActorCreated->SetTransportingConveyor(this);
 	ItemActorCreated->SetItemData(InItem);
