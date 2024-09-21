@@ -1,5 +1,6 @@
 #include "FGConveyorBelt.h"
 #include "FGUnitConnectorComponent.h"
+#include "FGItemActorComponent.h"
 
 AFGConveyorBelt::AFGConveyorBelt(const uint32 InTransportVolumePerMinute)
 	: Super()
@@ -9,7 +10,7 @@ AFGConveyorBelt::AFGConveyorBelt(const uint32 InTransportVolumePerMinute)
 
 	, bCanSpawnAnotherItem(true)
 	, TransportVolumePerMinute(InTransportVolumePerMinute)
-	, TransportingItems({})
+	, TransportingItems(nullptr)
 {
 }
 
@@ -17,28 +18,9 @@ void AFGConveyorBelt::Work(float DeltaTime)
 {
 	Super::Work(DeltaTime);
 
-	//uint32 ItemIndex = 0;
-	//while (ItemIndex++ < this->NumberOfItemsSleeping)
-	//	this->TransportingItems = *this->TransportingItems.Next;
-
-	//// Element (= ItemActor) Update
-	//while (this->TransportingItems.Next)
-	//	this->TransportingItems.Element;
-
 	if (!this->IsCycleReturned()) return;
 	this->WorkTime = 0.0f;
 
-	//if (this->bReceivedSleepRequest)
-	//{
-	//	this->bReceivedSleepRequest = false;
-	//	this->SetActorTickEnabled(false);
-	//	return;
-	//}
-
-	if (UFGItem* ItemFetched = this->InputConnector->FetchItem())
-	{
-
-	}
 }
 
 void AFGConveyorBelt::NotifyInputChanged()
@@ -86,7 +68,9 @@ void AFGConveyorBelt::HandleItemActorOverlapEndEvent(
 	UFGUnitConnectorComponent* InUnitConnector
 )
 {
-	check(false);
+	if (InUnitConnector == this->InputConnector)
+		this->bCanSpawnAnotherItem = true;
+
 	return;
 }
 
@@ -104,4 +88,25 @@ const FVector AFGConveyorBelt::GetTransportDirection() const
 		this->InputConnector->GetWorldLocation();
 
 	return TransportDirection.GetUnsafeNormal();
+}
+
+void AFGConveyorBelt::CreateItemActorComponent(UFGItem* InItem)
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Owner = this;
+
+	UFGItemActorComponent* ItemActorCreated = 
+		this->GetWorld()->SpawnActor<UFGItemActorComponent>(
+			UFGItemActorComponent::StaticClass(),
+			this->InputConnector->GetWorldLocation() -
+			this->GetActorLocation(),
+			FRotator::ZeroRotator,
+			SpawnParams
+		);
+
+	ItemActorCreated->SetTransportingConveyor(this);
+	ItemActorCreated->SetItemData(InItem);
+
+	this->TransportingItems = new TList<UFGItemActorComponent*>(ItemActorCreated, this->TransportingItems);
 }

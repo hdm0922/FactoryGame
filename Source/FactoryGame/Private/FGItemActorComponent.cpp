@@ -43,7 +43,9 @@ void UFGItemActorComponent::OnOverlapBegin(
 )
 {
 	UFGItemActorComponent* ItemActorComponentOverlapped = Cast<UFGItemActorComponent>(OverlappedComponent);
-	if (ItemActorComponentOverlapped) this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, ItemActorComponentOverlapped);
+	if (ItemActorComponentOverlapped &&
+		(this->TransportingConveyor == ItemActorComponentOverlapped->TransportingConveyor))
+		this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, ItemActorComponentOverlapped);
 
 	UFGUnitConnectorComponent* UnitConnectorOverlapped = Cast<UFGUnitConnectorComponent>(OverlappedComponent);
 	if (UnitConnectorOverlapped) this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, UnitConnectorOverlapped);
