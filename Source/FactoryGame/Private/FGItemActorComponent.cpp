@@ -26,7 +26,6 @@ void UFGItemActorComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
 	
 	if (!this->LastOverlappedItemActorComponent) return;
 
-	this->LastOverlappedItemActorComponent->LastOverlappedItemActorComponent = nullptr;
 	this->LastOverlappedItemActorComponent->SetComponentTickEnabled(true);
 	this->LastOverlappedItemActorComponent->TransportingConveyor->
 		HandleItemActorOverlapEndEvent(this, this->LastOverlappedItemActorComponent);
@@ -68,7 +67,9 @@ void UFGItemActorComponent::OnOverlapBegin(
 	if (ItemActorComponentOverlapped &&
 		(this->TransportingConveyor == ItemActorComponentOverlapped->TransportingConveyor))
 	{
-		this->LastOverlappedItemActorComponent = ItemActorComponentOverlapped;
+		if (ItemActorComponentOverlapped->IsComponentTickEnabled())
+			this->LastOverlappedItemActorComponent = ItemActorComponentOverlapped;
+
 		this->TransportingConveyor->HandleItemActorOverlapBeginEvent(this, ItemActorComponentOverlapped);
 	}
 	
@@ -95,8 +96,8 @@ void UFGItemActorComponent::OnOverlapEnd(
 
 	if (ItemActorComponentOverlapped == this->LastOverlappedItemActorComponent)
 	{
+		this->LastOverlappedItemActorComponent->SetComponentTickEnabled(true);
 		this->LastOverlappedItemActorComponent = nullptr;
-		this->SetComponentTickEnabled(true);
 		this->TransportingConveyor->HandleItemActorOverlapEndEvent(this, ItemActorComponentOverlapped);
 	}
 
@@ -110,26 +111,19 @@ void UFGItemActorComponent::OnOverlapEnd(
 
 void UFGItemActorComponent::SetStaticMesh()
 {
-	AActor* Owner = this->GetOwner();
-	if (!Owner) return;
-
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
 
 	this->StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	this->StaticMeshComponent->SetStaticMesh(CubeMesh.Object);
+	check(this->StaticMeshComponent->SetStaticMesh(CubeMesh.Object));
 
-	this->StaticMeshComponent->SetupAttachment(Owner->GetRootComponent());
-	this->StaticMeshComponent->RegisterComponent();
+	//check(this->StaticMeshComponent->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform));
+	//this->StaticMeshComponent->RegisterComponent();
 
-	// Set World Scale Fixed
-	this->StaticMeshComponent->SetWorldScale3D(FVector(0.05f, 0.15f, 0.08f));
-	this->StaticMeshComponent->SetUsingAbsoluteScale(true);
-
-	// Bind Overlap Events
-	this->StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-	this->StaticMeshComponent->SetGenerateOverlapEvents(true);
-	this->StaticMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &UFGItemActorComponent::OnOverlapBegin);
-	this->StaticMeshComponent->OnComponentEndOverlap.AddDynamic(this, &UFGItemActorComponent::OnOverlapEnd);
+	//// Bind Overlap Events
+	//this->StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+	//this->StaticMeshComponent->SetGenerateOverlapEvents(true);
+	//this->StaticMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &UFGItemActorComponent::OnOverlapBegin);
+	//this->StaticMeshComponent->OnComponentEndOverlap.AddDynamic(this, &UFGItemActorComponent::OnOverlapEnd);
 
 	return;
 }

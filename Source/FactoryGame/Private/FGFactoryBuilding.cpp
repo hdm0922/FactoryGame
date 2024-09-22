@@ -15,6 +15,7 @@ AFGFactoryBuilding::AFGFactoryBuilding(const uint32 _InputSize)
 
 	, Recipe(nullptr)
 {
+	OutputItemSlot = CreateDefaultSubobject<UFGItemSlot>(TEXT("Output Item Slot"));
 	this->InitializeStaticMeshComponent();
 
 	this->CreateInputConnectors(_InputSize);
@@ -26,12 +27,12 @@ void AFGFactoryBuilding::BeginPlay()
 	Super::BeginPlay();
 
 	{// Some Test Codes Coming In ...
-		this->SelectRecipe(1);
+		//this->SelectRecipe(1);
 
-		// Recipe 1 : [1] x 1 -> [2] x 1
-		// Give InputItemSlot [1] x 5
-		this->InputItemSlots[1]->Store(UFGGlobalItemTable::GetItem(1), 5);
-		this->NotifyInputChanged();
+		//// Recipe 1 : [1] x 1 -> [2] x 1
+		//// Give InputItemSlot [1] x 5
+		//this->InputItemSlots[1]->Store(UFGGlobalItemTable::GetItem(1), 5);
+		//this->NotifyInputChanged();
 
 		this->UpdateRunningState();
 		UE_LOG(LogTemp, Warning, TEXT("START.."));
@@ -59,7 +60,6 @@ void AFGFactoryBuilding::Work(float DeltaTime)
 	{
 		this->WorkTime = 0.0f;
 		this->ProduceOutput();
-		UE_LOG(LogTemp, Warning, TEXT("Work Done"));
 	}
 
 	return;
@@ -114,6 +114,11 @@ bool AFGFactoryBuilding::CanStoreItem(UFGItem* InItem, uint32 InLoadSize)
 bool AFGFactoryBuilding::CanRemoveItem(UFGItem* InItem, uint32 InLoadSize)
 {
 	return this->OutputItemSlot->CanRemove(InItem, InLoadSize);
+}
+
+UFGItem* AFGFactoryBuilding::GetItemSample() const
+{
+	return this->OutputItemSlot->GetItemSample();
 }
 
 void AFGFactoryBuilding::InitializeStaticMeshComponent()
@@ -187,6 +192,8 @@ void AFGFactoryBuilding::ProduceOutput()
 	{
 		this->OutputItemSlot->Store(GeneratedItemData.Key, GeneratedItemData.Value);
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("FactoryBuilding Made Item : %d"), this->OutputItemSlot->GetItemSample()->ItemID);
 
 	// NotifyOutputConnectors
 	this->OutputConnector->NotifyInputChanged();

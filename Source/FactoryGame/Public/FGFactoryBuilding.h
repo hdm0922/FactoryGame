@@ -38,6 +38,8 @@ public:
 	// Check OutputItemSlots
 	virtual bool CanRemoveItem(UFGItem* InItem, uint32 InLoadSize = 1) override;
 
+	virtual UFGItem* GetItemSample() const override;
+
 	void SelectRecipe(uint32 _RecipeID);
 	void SelectRecipe(UFGRecipe* _Recipe);
 

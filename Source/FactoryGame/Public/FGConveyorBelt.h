@@ -35,8 +35,11 @@ public:
 	const FVector GetTransportDirection() const;
 	UFGItemActorComponent* GetItemActorComponent(UStaticMeshComponent* InStaticMesh) { return this->TransportingItems[InStaticMesh]; }
 
+	void RegisterItemActor(UFGItemActorComponent* InItemActor);
+
 protected:
 
+	virtual void BeginPlay() override;
 	virtual void InitializeStaticMeshComponent() override;
 
 private:
