@@ -35,6 +35,10 @@ public:
 	const FVector GetTransportDirection() const;
 	UFGItemActorComponent* GetItemActorComponent(UStaticMeshComponent* InStaticMesh) { return this->TransportingItems[InStaticMesh]; }
 
+protected:
+
+	virtual void InitializeStaticMeshComponent() override;
+
 private:
 
 	// Creates An ItemActorComponent At InputConnector's World Location.

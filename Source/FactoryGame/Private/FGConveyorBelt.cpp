@@ -14,6 +14,8 @@ AFGConveyorBelt::AFGConveyorBelt(const uint32 InTransportVolumePerMinute)
 	, ItemActorOverlappingOutputConnector(nullptr)
 {
 	this->WorkTime = this->GetCycleTime();
+
+	this->InitializeStaticMeshComponent();
 }
 
 void AFGConveyorBelt::Work(float DeltaTime)
@@ -144,6 +146,17 @@ const FVector AFGConveyorBelt::GetTransportDirection() const
 		this->InputConnector->GetWorldLocation();
 
 	return TransportDirection.GetUnsafeNormal();
+}
+
+void AFGConveyorBelt::InitializeStaticMeshComponent()
+{
+	Super::InitializeStaticMeshComponent();
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
+	this->StaticMeshComponent->SetStaticMesh(CubeMesh.Object);
+	this->StaticMeshComponent->SetRelativeScale3D(FVector(1.0f, 3.0f, 0.1f));
+
+	return;
 }
 
 void AFGConveyorBelt::CreateItemActorComponent(UFGItem* InItem)
